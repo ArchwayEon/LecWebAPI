@@ -1,6 +1,12 @@
 using LecWebAPI.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<ApplicationDbContext>(options => {
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 
 // Allow postman to send requests
 builder.Services.AddCors(options =>
@@ -16,7 +22,7 @@ builder.Services.AddCors(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<IPetRepository, IMPetRepository>();
+builder.Services.AddScoped<IPetRepository, DbPetRepository>();
 
 var app = builder.Build();
 
